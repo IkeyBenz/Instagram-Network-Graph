@@ -8,8 +8,7 @@ from selenium.common.exceptions import StaleElementReferenceException, TimeoutEx
 from os import path, makedirs, listdir, getcwd
 from time import sleep
 
-from util import valid_input
-
+from util import get_user_follower_path, get_user_following_path
 
 class InstagramScrapper(object):
     """
@@ -19,6 +18,7 @@ class InstagramScrapper(object):
     def __init__(self, username, password):
         opts = ChromeOptions()
         opts.add_experimental_option('w3c', False)
+        # opts.add_argument('--headless')
         self.driver = Chrome(
             chrome_options=opts, executable_path=path.join(getcwd(), 'chromedriver'))
 
@@ -162,11 +162,11 @@ class InstagramScrapper(object):
             of the two.
         """
         # Get followers
-        followers_path = f"data/instagram/{self.user['username']}/followers.txt"
+        followers_path = get_user_follower_path()
         followers = self.log_followers(followers_path)
 
         # Get following
-        following_path = f"data/instagram/{self.user['username']}/following.txt"
+        following_path = get_user_following_path()
         following = self.log_following(following_path)
 
         # Get intersection

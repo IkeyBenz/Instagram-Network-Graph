@@ -1,6 +1,7 @@
 from instagram_bot_scraper import InstagramScrapper
-from util import valid_input
 from os import path, makedirs
+
+from util import valid_input
 
 
 def start():
