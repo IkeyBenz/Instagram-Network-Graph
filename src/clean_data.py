@@ -5,7 +5,11 @@ from util import get_data_dir, get_mutual_followship_path, get_user_connections_
 data_dir = get_data_dir()
 authenticated_username = get_authenticated_username()
 connections_path = get_user_connections_path()
-users_connections = set(open(connections_path).read().splitlines())
+
+def get_users_connections():
+    return set(open(connections_path).read().splitlines())
+
+
 
 
 def correct_mutual_follwers():
@@ -15,7 +19,7 @@ def correct_mutual_follwers():
             continue
 
         mutuals = set(open(mutuals_path).read().splitlines())
-        corrected = mutuals.intersection(users_connections)
+        corrected = mutuals.intersection(get_users_connections())
 
         with open(mutuals_path, 'w') as out:
             out.write("\n".join(corrected))
@@ -28,7 +32,7 @@ def check_mutual_correctness():
             continue
 
         stored_mutuals = set(open(mutuals_path).read().splitlines())
-        extras = stored_mutuals.difference(users_connections)
+        extras = stored_mutuals.difference(get_users_connections())
         if len(extras) > 0:
             print(account, "has extra mutuals:", extras)
 

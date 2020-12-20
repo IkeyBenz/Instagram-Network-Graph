@@ -1,8 +1,10 @@
-from instagram_bot_scraper import InstagramScrapper
 from os import path, makedirs
 
+from instagram_bot_scraper import InstagramScrapper
 from util import valid_input
-
+from clean_data import correct_mutual_follwers
+from data_to_json import save_follow_data_to_json
+from server import serve_html_and_data
 
 def start():
     print("> Opening Chrome Webdriver...")
@@ -34,8 +36,14 @@ def start():
 
 
 def show_interface(scraper):
-    print("> What would you like to do?\n\t1) Log usernames that follow me\n\t2) Log usernames I follow\n\t3) Log usernames who I follow and follow me back\n\t4) Get mutual friend links between my connections")
-    choice = valid_input("Enter 1/2/3/4: ", ['1', '2', '3', '4'])
+    print('''
+    > What would you like to do?
+        1) Log usernames that follow me
+        2) Log usernames I follow
+        3) Log usernames who I follow and follow me back
+        4) Get mutual friend links between my connections
+        5) Graph my social network using data stored in data/instagram (running option 4 is a prerequisite)''')
+    choice = valid_input("Enter 1/2/3/4/5: ", ['1', '2', '3', '4', '5'])
 
     user_data_path = f"data/instagram/{scraper.user['username']}/"
     if not path.exists(user_data_path):
@@ -66,6 +74,16 @@ def show_interface(scraper):
         for account in connections:
             scraper.user['username'] = account
             scraper.log_mutuals_with(og_user)
+    elif choice == '5':
+        print('> Cleaning the data...')
+        correct_mutual_follwers()
+
+        print('> Generating JSON...')
+        save_follow_data_to_json()
+
+        print('> Serving html page...')
+        serve_html_and_data()
+
 
     print("> Would you like to run another task?")
     choice = valid_input("Enter y/n: ", ['Y', 'y', 'N', 'n'])

@@ -6,13 +6,12 @@ able to open index.html and see a D3.js visualization of your social network.
 """
 import json
 from os import listdir, path
-from clean_data import correct_mutual_follwers
+from clean_data import correct_mutual_follwers, get_users_connections
 from util import get_data_dir, get_mutual_followship_path, get_user_connections_path
 
 data_dir = "data/instagram"
 username = open('ig.credentials.txt').read().split(',')[0]
 connections_path = get_user_connections_path()
-user_connections = set(open(connections_path).read().splitlines())
 
 
 def get_links():
@@ -27,17 +26,19 @@ def get_links():
     print("Links", len(links))
     return links
 
-
-if __name__ == '__main__':
-    correct_mutual_follwers()
-
+def save_follow_data_to_json():
+    users_connections = get_users_connections()
     data = {
         "nodes": [
             {"id": acc, "group": 1}
-            for acc in user_connections
-        ] + [{"id": "{username}", "group": 1}],
+            for acc in users_connections
+        ] + [{"id": username, "group": 1}],
         "links": get_links()
     }
 
     with open('data.json', 'w') as out:
         json.dump(data, out)
+
+if __name__ == '__main__':
+    correct_mutual_follwers()
+    save_follow_data_to_json()

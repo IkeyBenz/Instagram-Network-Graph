@@ -1,7 +1,7 @@
 from os import path
 
 CREDENTIALS_PATH = 'ig.credentials.txt'
-DATA_DIR = 'data'
+DATA_DIR = 'data/instagram'
 
 def valid_input(prompt, acceptable_responses):
     response = input(prompt)
@@ -30,7 +30,7 @@ def get_user_following_path():
     return path.join(DATA_DIR, username, 'following.txt')
 
 def get_user_follower_path():
-    usrename = get_authenticated_username()
+    username = get_authenticated_username()
     return path.join(DATA_DIR, username, 'followers.txt')
 
 def get_mutual_followship_path(with_username):
